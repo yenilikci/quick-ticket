@@ -7,7 +7,9 @@ import (
 	"github.com/yenilikci/quick-ticket/config"
 	"github.com/yenilikci/quick-ticket/db"
 	"github.com/yenilikci/quick-ticket/handlers"
+	"github.com/yenilikci/quick-ticket/middlewares"
 	"github.com/yenilikci/quick-ticket/repositories"
+	"github.com/yenilikci/quick-ticket/services"
 )
 
 func main() {
@@ -21,11 +23,17 @@ func main() {
 
 	eventRepository := repositories.NewEventRepository(db)
 	ticketRepository := repositories.NewTicketRepository(db)
+	authRepository := repositories.NewAuthRepository(db)
+
+	authService := services.NewAuthService(authRepository)
 
 	server := app.Group("/api")
+	handlers.NewAuthHandler(server.Group("/auth"), authService)
 
-	handlers.NewEventHandler(server.Group("/event"), eventRepository)
-	handlers.NewTicketHandler(server.Group("/ticket"), ticketRepository)
+	privateRoutes := server.Use(middlewares.AuthProtected(db))
+
+	handlers.NewEventHandler(privateRoutes.Group("/event"), eventRepository)
+	handlers.NewTicketHandler(privateRoutes.Group("/ticket"), ticketRepository)
 
 	app.Listen(fmt.Sprintf(":" + envConfig.ServerPort))
 }
