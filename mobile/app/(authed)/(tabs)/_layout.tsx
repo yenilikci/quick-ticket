@@ -12,7 +12,7 @@ export default function TabLayout() {
             displayName: "Events",
             icon: "calendar",
             options: {
-                headerShown: true
+                headerShown: false
             }
         },
         {
@@ -45,7 +45,18 @@ export default function TabLayout() {
     ];
 
     return (
-        <Tabs>
+        <Tabs
+            screenOptions={{
+                tabBarStyle: {
+                    height: 60,
+                    borderRadius: 50,
+                    margin: 10
+                },
+                tabBarItemStyle: {
+                    padding: 5
+                }
+            }}
+        >
             {tabs.map(tab => (
                 <Tabs.Screen
                     key={tab.name}
