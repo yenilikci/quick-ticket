@@ -10,6 +10,7 @@ import { UserRole } from "@/types/user";
 import { router, useNavigation } from "expo-router";
 import { useCallback, useEffect, useState } from "react"
 import { Alert, FlatList, TouchableOpacity } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function EventsScreen() {
     const { user } = useAuth();
@@ -44,9 +45,9 @@ export default function EventsScreen() {
         }
     }, []);
 
-    useEffect(() => {
-        fetchEvents();
+    useFocusEffect(useCallback(() => { fetchEvents(); }, []));
 
+    useEffect(() => {
         navigation.setOptions({
             headerTitle: "Events",
             headerRight: user?.role === UserRole.Manager ? headerRight : null,
