@@ -8,7 +8,7 @@ services:
     container_name: quick-ticket
     build: .
     ports:
-      - 8081:8081
+      - 5000:5000
     env_file:
       - .env
     networks:
