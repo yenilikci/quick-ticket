@@ -11,6 +11,7 @@ import { router, useNavigation } from "expo-router";
 import { useCallback, useEffect, useState } from "react"
 import { Alert, FlatList, TouchableOpacity } from "react-native";
 import { useFocusEffect } from '@react-navigation/native';
+import { ticketService } from "@/services/ticket";
 
 export default function EventsScreen() {
     const { user } = useAuth();
@@ -25,11 +26,13 @@ export default function EventsScreen() {
         }
     }
 
-    function buyTicket(id: number) {
+    async function buyTicket(id: number) {
         try {
-            Alert.alert("Success", "Ticket purchased successfully!")
+            await ticketService.createOne(id);
+            Alert.alert("Success", "Ticket purchased successfully");
+            fetchEvents();
         } catch (error) {
-            Alert.alert("Error", "Failed to buy ticket")
+            Alert.alert("Error", "Failed to buy ticket");
         }
     }
 
